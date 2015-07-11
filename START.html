@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="./Styles/Site.css" />
+<title>
+        MarioOnStairs
+</title>
+<script type="text/javascript">
+
+
+ 
+
+function deleteCookie(name) {
+	setCookie(name, null, { expires: -1 })
+}
+function setCookie(name, value, props) {
+	props = props || {}
+	var exp = props.expires
+	if (typeof exp == "number" && exp) {
+		var d = new Date()
+		d.setTime(d.getTime() + exp*1000)
+		exp = props.expires = d
+	}
+	if(exp && exp.toUTCString) { props.expires = exp.toUTCString() }
+
+	value = encodeURIComponent(value)
+	var updatedCookie = name + "=" + value
+	for(var propName in props){
+		updatedCookie += "; " + propName
+		var propValue = props[propName]
+		if(propValue !== true){ updatedCookie += "=" + propValue }
+	}
+	document.cookie = updatedCookie
+
+}
+</script>
+</head>
+<body>
+    <div id="joy_div"></div>
+<div align="center">
+<div align="left" style="margin-top:0px; width:924px; height: 504px; background-image: url('./Images/Backgrounds/main_page.jpg');">
+ <div  style="position:relative; top:250px; left:500px; width:250px; font-size:28px;">
+        <a href="game.html">Играть</a><br>
+	<a href="editor.html">Редактор</a><br>
+        <span style="color:blue; text-decoration: underline;" onclick="deleteCookie('level');document.location.href='game.html';">Играть с начала</span><br>
+	<a href="rules.html">Правила</a><br>
+	
+ </div>
+ </div>
+ </div>
+</body>
+</html>

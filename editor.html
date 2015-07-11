@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf8">
+<link rel="stylesheet" type="text/css" href="./Styles/Site.css">
+<script type="text/javascript">
+    // Кисть рисования элементов
+	var instrument = 0; 
+	// Пустая матрица для рисования
+    var worldMatrix = [
+    [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2, 8],
+    [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+    ];
+
+//==================== Устанавливает в пямяти кисть рисования ==============================
+    function setInstrument(dataNum){
+        var Num=0;
+        instrument = dataNum.replace("eDiv","");
+        instrument = parseInt(instrument);
+		//alert(instrument);
+
+    }
+// =================== Отображает кисти ===============================
+    function setElementsBrush(){
+        var x = 0;
+        var leftValue = 80;
+        for(x = -3;x<15; x++){
+        eDiv = document.createElement("div");
+        eDiv.id = "eDiv"+x;
+        eDiv.style.border= "Solid 1px silver";
+        eDiv.style.width="42px;";
+        eDiv.style.height = "42px;";
+        eDiv.innerHTML = x;
+        eDiv.style.left = leftValue+"px";
+        eDiv.onclick = function(){
+            setInstrument(this.id);
+        }
+        leftValue += 42;
+        switch (x) {
+            case 8:
+                eDiv.className = "blockGroundDiv";
+                break;
+            case 6:
+                eDiv.className = "blockSkyBlueDiv";
+                break;
+            case 0:
+                eDiv.className = "blockSkyBlueDiv";
+				eDiv.innerHTML = "Свободно<br>Ходить";
+				eDiv.style.fontSize = "8px";
+                break;
+            case 9:
+                eDiv.className = "blockSkyBlueDiv";
+                break;
+            case -3:
+                eDiv.className = "blockSkyBlueDiv";
+                break;
+            case -1:
+                eDiv.className = "blockSkyBlueDiv";
+                break;
+            case -2:
+                eDiv.className = "blockSkyBlueDiv";
+				eDiv.innerHTML = "Падение";
+				eDiv.style.fontSize = "9px";
+                break;
+            case 1:
+                eDiv.className = "blockBorderDiv";
+                break;
+            case 3:
+                eDiv.className = "blockWallDiv";
+                break;
+            case 2:
+                eDiv.className = "blockWallLeftDiv";
+                break;
+            case 5:
+                eDiv.className = "blockWallRightDiv";
+                break;
+            case 4:
+                eDiv.className = "blockElevatorDiv";
+                break;
+            case 7:
+                eDiv.className = "blockStarDiv";
+                break;
+            case 10:
+                eDiv.className = "bushBlock";
+                break;
+            case 11:
+                eDiv.className = "bushBlockBig";
+                break;
+            case 12:
+                eDiv.className = "bushBlock2";
+                break;
+            case 13:
+                eDiv.className = "lampBlock";
+                break;
+            case 14:
+                eDiv.className = "mashroomBlock";
+                break;
+        }
+		eDiv.style.boxShadow = " 0 0 10px silver";
+        document.getElementById("elements").appendChild(eDiv);
+        }
+    assembleWorld();
+    }
+    function assembleWorld() {
+        var i = 0;
+        var j = 0;
+        var top;
+        var left;
+        var d = null;
+
+        for (i = 0; i < 12; i++) {
+            for (j = 0; j < 22; j++) {
+
+            d = document.createElement("div");
+            d.id = "blok"+i+"-"+j;
+            top = i * 42 + 90;
+            left = j * 42;
+
+            d.style.width = "42px";
+            d.style.height= "42px";
+            d.style.position = "absolute";
+            d.style.top = top + "px";
+            d.style.left = left + "px";
+            d.style.border = "solid 1px black";
+            //d.innerHTML =  i+"-"+j;
+            d.onclick = function(){
+                setBlock(this.id,this);
+            }
+            document.getElementById("game_field").appendChild(d);
+            }
+        }
+
+    }
+    function setBlock(objId,obj){
+     var i = 0;
+     var j = 0;
+	 obj.innerHTML = "";
+     var img = document.createElement("img");
+	 objId = objId.replace("blok","");
+     objIJ = objId.split("-");
+     //alert(objIJ[0]+"::"+objIJ[1]);
+     i = objIJ[0];
+     j = objIJ[1];
+	 i = parseInt(i);
+	 j = parseInt(j);
+	 worldMatrix[i][j] = instrument;
+	 switch(instrument){
+		case 2:
+			img.src = "./Images/Blocks/wallBlockLeft.png";
+		break;
+		case 1:
+			img.src = "./Images/Blocks/borderBlock.png";
+		break;
+		case 3:
+			img.src = "./Images/Blocks/wallBlock.png";
+		break;
+		case 5:
+			img.src = "./Images/Blocks/wallBlockRight.png";
+		break;
+		case 7:
+			img.src = "./Images/Blocks/star.png";
+		break;
+		case 8:
+			img.src = "./Images/Blocks/groundBlock.png";
+		break;
+		case 10:
+			img.src = "./Images/Blocks/bushBlock.png";
+		break;
+		case 11:
+			img.src = "./Images/Blocks/bushBlockBig.png";
+		break;
+		case 12:
+			img.src = "./Images/Blocks/bushBlock2.png";
+		break;
+		case 13:
+			img.src = "./Images/Blocks/lampBlock.png";
+		break;
+		case 14:
+			img.src = "./Images/Blocks/mashroomBlock.png";
+		break;
+		
+			
+	 }
+		obj.appendChild(img);
+		
+    }
+function viewWM(){
+	var wmDiv = document.getElementById("srcWM");
+	var i = 0;
+	var j = 0;
+	wmDiv.innerHTML = "worldMatrix = [<br>";
+		
+		for(i = 0; i <= 11; i++){
+			wmDiv.innerHTML += "[";
+			for(j = 0; j < 21; j++){
+				if(worldMatrix[i][j] < 0) {
+				wmDiv.innerHTML += worldMatrix[i][j]+",";
+				} else {
+				wmDiv.innerHTML += " "+worldMatrix[i][j]+",";
+				
+				}
+			}
+			wmDiv.innerHTML += " 8],<br>";
+		}
+	wmDiv.innerHTML += "];"
+}
+</script>
+</head>
+<body onload="setElementsBrush();">
+
+<div align="center" id="elements" style="background-color:white; width:100%; height: 50px;"></div>
+
+<div id="game_field" style="width:924px;height:504px; margin-top:40px;border: solid 1px navy; box-shadow: 0 0 7px orange;">
+
+</div>
+
+<br>
+<div align="center">
+<div id="srcWM" style="width:100%; background-color: white; font-family:Courier New; font-size:12px;">
+	
+</div>
+<br>
+<input type="button" value="ViewWorldMatrix" onclick="viewWM();">
+<br>
+</div>
+</body>
+</html>
